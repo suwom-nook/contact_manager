@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>인맥 관리 시스템</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Serif+KR:wght@400;600&display=swap');
+  :root {
+    --bg:#0d1117; --bg2:#161b22; --bg3:#1c2333; --bg4:#21262d;
+    --border:#30363d; --border2:#3d4450;
+    --text:#e6edf3; --text2:#8b949e; --text3:#6e7681;
+    --accent:#58a6ff; --accent2:#1f6feb;
+    --green:#3fb950; --red:#f85149; --yellow:#d29922;
+    --purple:#bc8cff; --orange:#e3b341; --teal:#39d353;
+    --card-shadow:0 8px 32px rgba(0,0,0,.4);
+    --radius:10px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
+
+  .topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:200;}
+  .topbar-logo{font-family:'Noto Serif KR',serif;font-size:17px;font-weight:600;color:var(--accent);white-space:nowrap;}
+  .topbar-search{flex:1;max-width:480px;position:relative;}
+  .topbar-search input{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 12px 7px 34px;color:var(--text);font-size:13px;font-family:inherit;outline:none;transition:border-color .2s;}
+  .topbar-search input:focus{border-color:var(--accent2);}
+  .topbar-search input::placeholder{color:var(--text3);}
+  .search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px;pointer-events:none;}
+  .topbar-actions{margin-left:auto;display:flex;gap:8px;}
+
+  .btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:6px;font-size:13px;font-family:inherit;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--bg4);color:var(--text);transition:all .15s;white-space:nowrap;}
+  .btn:hover{background:var(--bg3);border-color:var(--border2);}
+  .btn-primary{background:var(--accent2);border-color:transparent;color:#fff;}
+  .btn-primary:hover{background:#388bfd;}
+  .btn-green{background:rgba(63,185,80,.15);border-color:var(--green);color:var(--green);}
+  .btn-red{background:rgba(248,81,73,.12);border-color:var(--red);color:var(--red);}
+  .btn-sm{padding:3px 8px;font-size:11px;}
+
+  .view-tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;}
+  .view-tab{padding:12px 18px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:none;color:var(--text2);font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;display:flex;align-items:center;gap:5px;}
+  .view-tab:hover{color:var(--text);}
+  .view-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+  .layout{display:flex;flex:1;height:calc(100vh - 104px);overflow:hidden;}
+
+  .sidebar{width:295px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;}
+  .sidebar-header{padding:12px 14px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  .sidebar-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text2);}
+  .person-count{font-size:11px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:2px 8px;color:var(--text2);}
+  .filter-bar{padding:8px 10px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:5px;}
+  .filter-row{display:flex;gap:5px;}
+  .filter-select{background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;font-family:inherit;padding:5px 8px;width:100%;outline:none;cursor:pointer;}
+  .filter-select:focus{border-color:var(--accent2);}
+
+  .person-list{flex:1;overflow-y:auto;padding:4px 0;}
+  .person-list::-webkit-scrollbar{width:3px;}
+  .person-list::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
+  .person-item{display:flex;align-items:center;gap:9px;padding:8px 12px;cursor:pointer;border-left:3px solid transparent;transition:all .15s;}
+  .person-item:hover{background:var(--bg3);}
+  .person-item.active{background:rgba(31,111,235,.12);border-left-color:var(--accent);}
+  .avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;border:2px solid;}
+  .person-info{flex:1;min-width:0;}
+  .person-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .person-meta{font-size:11px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
+  .influence-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+  .main{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+  .main::-webkit-scrollbar{width:5px;}
+  .main::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
+
+  .detail-view{flex:1;padding:24px 28px;max-width:980px;}
+  .detail-hero{display:flex;gap:20px;align-items:flex-start;margin-bottom:22px;}
+  .detail-avatar{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;flex-shrink:0;border:3px solid;}
+  .detail-name{font-family:'Noto Serif KR',serif;font-size:24px;font-weight:600;margin-bottom:5px;}
+  .detail-role{font-size:13px;color:var(--text2);margin-bottom:10px;}
+  .tags{display:flex;flex-wrap:wrap;gap:5px;}
+  .tag{display:inline-flex;align-items:center;gap:3px;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:500;border:1px solid;}
+  .tag-blue{background:rgba(88,166,255,.12);border-color:rgba(88,166,255,.4);color:var(--accent);}
+  .tag-green{background:rgba(63,185,80,.12);border-color:rgba(63,185,80,.4);color:var(--green);}
+  .tag-yellow{background:rgba(210,153,34,.12);border-color:rgba(210,153,34,.4);color:var(--yellow);}
+  .tag-purple{background:rgba(188,140,255,.12);border-color:rgba(188,140,255,.4);color:var(--purple);}
+  .tag-red{background:rgba(248,81,73,.12);border-color:rgba(248,81,73,.4);color:var(--red);}
+
+  .section-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:16px;}
+  .section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
+
+  .influence-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;}
+  .influence-item{display:flex;flex-direction:column;gap:5px;}
+  .influence-label{font-size:12px;color:var(--text2);}
+  .influence-bar{height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;}
+  .influence-fill{height:100%;border-radius:3px;transition:width .6s cubic-bezier(.4,0,.2,1);}
+  .influence-value{font-size:11px;font-weight:600;display:flex;justify-content:space-between;}
+
+  .events-grid{display:flex;flex-wrap:wrap;gap:8px;}
+  .event-badge{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:2px solid;transition:all .2s;user-select:none;}
+  .event-badge.active{box-shadow:0 0 10px rgba(88,166,255,.2);}
+  .event-badge:not(.active){opacity:.4;filter:grayscale(.5);}
+  .event-badge:hover{opacity:1;filter:none;}
+
+  .relation-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+  .relation-item:last-child{border-bottom:none;}
+  .rel-name{width:88px;font-size:13px;font-weight:500;flex-shrink:0;cursor:pointer;color:var(--accent);}
+  .rel-name:hover{text-decoration:underline;}
+  .closeness-track{flex:1;height:7px;background:var(--bg3);border-radius:4px;cursor:pointer;position:relative;}
+  .closeness-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent2),var(--purple));transition:width .3s;}
+  .closeness-value{width:30px;font-size:11px;font-weight:600;color:var(--text2);text-align:right;}
+
+  .meeting-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:9px;border-left:3px solid var(--accent2);}
+  .meeting-date{font-size:12px;color:var(--accent);font-weight:600;}
+  .meeting-details{display:flex;gap:14px;margin:5px 0;flex-wrap:wrap;}
+  .meeting-detail-item{font-size:12px;color:var(--text2);}
+  .meeting-memo{font-size:13px;line-height:1.65;background:var(--bg4);border-radius:6px;padding:9px 11px;margin-top:7px;}
+  .meeting-eval{margin-top:6px;padding:7px 11px;background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.2);border-radius:6px;font-size:12px;color:var(--green);}
+
+  .empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text3);gap:10px;padding:60px;}
+
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity .2s;}
+  .modal-overlay.show{opacity:1;pointer-events:all;}
+  .modal{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:26px;width:580px;max-width:96vw;max-height:90vh;overflow-y:auto;transform:translateY(20px);transition:transform .2s;box-shadow:var(--card-shadow);}
+  .modal-overlay.show .modal{transform:translateY(0);}
+  .modal-title{font-family:'Noto Serif KR',serif;font-size:17px;font-weight:600;margin-bottom:18px;}
+  .form-group{margin-bottom:12px;}
+  .form-label{display:block;font-size:11px;font-weight:700;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
+  .form-input,.form-textarea,.form-select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:8px 11px;color:var(--text);font-size:13px;font-family:inherit;outline:none;transition:border-color .2s;}
+  .form-input:focus,.form-textarea:focus,.form-select:focus{border-color:var(--accent2);}
+  .form-textarea{resize:vertical;min-height:70px;}
+  .form-row{display:flex;gap:9px;}
+  .form-row .form-group{flex:1;}
+  .modal-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;padding-top:14px;border-top:1px solid var(--border);}
+  .star-input{display:flex;gap:3px;}
+  .star-btn{font-size:20px;cursor:pointer;transition:transform .1s;background:none;border:none;padding:0;}
+  .star-btn:hover{transform:scale(1.15);}
+
+  .grid-view{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;padding:20px;}
+  .grid-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:all .2s;}
+  .grid-card:hover{border-color:var(--accent2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3);}
+  .grid-card-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+
+  .network-view{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+  .net-tooltip{position:absolute;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;padding:6px 10px;font-size:12px;pointer-events:none;z-index:100;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.4);display:none;}
+
+  /* ── ADMIN ── */
+  .admin-wrap{flex:1;overflow-y:auto;padding:28px 32px;max-width:940px;}
+  .admin-page-title{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:600;margin-bottom:4px;}
+  .admin-page-sub{font-size:13px;color:var(--text2);margin-bottom:24px;}
+  .admin-sections{display:grid;grid-template-columns:repeat(auto-fill,minmax(390px,1fr));gap:16px;margin-bottom:20px;}
+  .admin-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px;}
+  .admin-card-title{font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+  .tag-list{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;min-height:32px;}
+  .editable-tag{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;font-size:12px;}
+  .del-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:15px;line-height:1;padding:0 1px;}
+  .del-btn:hover{color:var(--red);}
+  .add-tag-row{display:flex;gap:6px;}
+  .add-tag-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--text);font-size:12px;font-family:inherit;outline:none;transition:border-color .2s;}
+  .add-tag-input:focus{border-color:var(--accent2);}
+
+  .region-preview-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
+  .sido-chip{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12px;cursor:pointer;transition:border-color .15s;}
+  .sido-chip:hover{border-color:var(--accent);}
+  .sido-chip.open{border-color:var(--accent);background:rgba(31,111,235,.08);}
+  .sido-chip-name{font-weight:600;margin-bottom:3px;}
+  .sido-chip-count{color:var(--text3);font-size:11px;}
+  .sigungu-list{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;padding:8px;background:var(--bg3);border-radius:6px;max-height:120px;overflow-y:auto;}
+  .sigungu-item{font-size:11px;color:var(--text2);padding:2px 7px;background:var(--bg4);border-radius:4px;}
+
+  .divider{height:1px;background:var(--border);margin:18px 0;}
+  ::-webkit-scrollbar{width:4px;height:4px;}
+  ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  .fade-in{animation:fadeIn .25s ease;}
+  .no-results{text-align:center;padding:36px;color:var(--text3);font-size:13px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">🏛️ 인맥 관리 시스템</div>
+  <div class="topbar-search">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="이름, 소속, 지역, 정당 검색...">
+  </div>
+  <div class="topbar-actions">
+    <button class="btn btn-green" onclick="openAddPersonModal()">＋ 인물 추가</button>
+  </div>
+</div>
+
+<div class="view-tabs">
+  <button class="view-tab active" onclick="switchView('list')" id="tab-list">👤 인물 목록</button>
+  <button class="view-tab" onclick="switchView('grid')" id="tab-grid">⊞ 카드 보기</button>
+  <button class="view-tab" onclick="switchView('network')" id="tab-network">🕸 관계도</button>
+  <button class="view-tab" onclick="switchView('admin')" id="tab-admin">⚙️ 관리자</button>
+</div>
+
+<div class="layout" id="mainLayout">
+  <div class="sidebar" id="sidebarEl">
+    <div class="sidebar-header">
+      <span class="sidebar-title">인물</span>
+      <span class="person-count" id="personCount">0명</span>
+    </div>
+    <div class="filter-bar">
+      <select class="filter-select" id="filterParty" onchange="applyFilters()">
+        <option value="">전체 정당</option>
+      </select>
+      <div class="filter-row">
+        <select class="filter-select" id="filterSido" onchange="onSidoFilter()">
+          <option value="">전체 광역</option>
+        </select>
+        <select class="filter-select" id="filterSigungu" onchange="applyFilters()">
+          <option value="">전체 시군구</option>
+        </select>
+      </div>
+      <select class="filter-select" id="filterRelType" onchange="applyFilters()">
+        <option value="">전체 분류</option>
+      </select>
+      <select class="filter-select" id="filterInfluence" onchange="applyFilters()">
+        <option value="">전체 영향력</option>
+        <option value="5">⭐⭐⭐⭐⭐ 최고</option>
+        <option value="4">⭐⭐⭐⭐ 높음</option>
+        <option value="3">⭐⭐⭐ 보통</option>
+        <option value="2">⭐⭐ 낮음</option>
+        <option value="1">⭐ 최저</option>
+      </select>
+    </div>
+    <div class="person-list" id="personList"></div>
+  </div>
+
+  <div class="main" id="mainContent">
+    <div class="empty-state" id="emptyState">
+      <div style="font-size:44px;">🏛️</div>
+      <div style="font-size:15px;">인물을 선택하거나 추가하세요</div>
+      <div style="font-size:13px;">좌측 목록에서 인물을 선택하면 상세 정보가 표시됩니다</div>
+    </div>
+    <div id="detailView" style="display:none;"></div>
+    <div id="gridView" style="display:none;" class="grid-view"></div>
+    <div id="networkView" style="display:none;" class="network-view">
+      <canvas id="networkCanvas"></canvas>
+      <div class="net-tooltip" id="netTooltip"></div>
+    </div>
+    <div id="adminView" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- PERSON MODAL -->
+<div class="modal-overlay" id="addPersonModal">
+  <div class="modal">
+    <div class="modal-title" id="personModalTitle">👤 인물 추가</div>
+    <input type="hidden" id="editPersonId">
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">이름 *</label><input class="form-input" id="pName" placeholder="홍길동"></div>
+      <div class="form-group"><label class="form-label">성별</label><select class="form-select" id="pSex"><option value="">-</option><option value="남">남</option><option value="여">여</option></select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">소속 / 기관</label><input class="form-input" id="pCompany" placeholder="국회의원 사무실"></div>
+      <div class="form-group"><label class="form-label">직책</label><input class="form-input" id="pDuty" placeholder="보좌관"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">정당</label><select class="form-select" id="pParty"></select></div>
+      <div class="form-group"><label class="form-label">관계 분류</label><select class="form-select" id="pRelation"></select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">광역시도</label>
+        <select class="form-select" id="pSido" onchange="onPersonSidoChange()"></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">시 · 군 · 구</label>
+        <select class="form-select" id="pSigungu"></select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">휴대폰</label><input class="form-input" id="pPhone" placeholder="010-0000-0000"></div>
+      <div class="form-group"><label class="form-label">생년월일</label><input class="form-input" id="pBirth" type="date"></div>
+    </div>
+    <div class="form-group"><label class="form-label">메모</label><textarea class="form-textarea" id="pMemo" placeholder="특이사항, 관심사, 배경..."></textarea></div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">정치적 영향력</label>
+        <div class="star-input" id="pPoliticalStars">
+          <button class="star-btn" onclick="setPStar('political',1)">☆</button><button class="star-btn" onclick="setPStar('political',2)">☆</button><button class="star-btn" onclick="setPStar('political',3)">☆</button><button class="star-btn" onclick="setPStar('political',4)">☆</button><button class="star-btn" onclick="setPStar('political',5)">☆</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">지역 영향력</label>
+        <div class="star-input" id="pLocalStars">
+          <button class="star-btn" onclick="setPStar('local',1)">☆</button><button class="star-btn" onclick="setPStar('local',2)">☆</button><button class="star-btn" onclick="setPStar('local',3)">☆</button><button class="star-btn" onclick="setPStar('local',4)">☆</button><button class="star-btn" onclick="setPStar('local',5)">☆</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('addPersonModal')">취소</button>
+      <button class="btn btn-primary" onclick="savePerson()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- MEETING MODAL -->
+<div class="modal-overlay" id="addMeetingModal">
+  <div class="modal">
+    <div class="modal-title">📝 만남 기록 추가</div>
+    <input type="hidden" id="meetingPersonId">
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">날짜 *</label><input class="form-input" id="mDate" type="date"></div>
+      <div class="form-group"><label class="form-label">장소</label><input class="form-input" id="mPlace" placeholder="국회의사당 회의실"></div>
+    </div>
+    <div class="form-group"><label class="form-label">동석자 (쉼표 구분)</label><input class="form-input" id="mWith" placeholder="김철수, 이영희"></div>
+    <div class="form-group"><label class="form-label">만남 내용 / 메모</label><textarea class="form-textarea" id="mMemo" placeholder="분위기, 주요 발언, 논의 내용..."></textarea></div>
+    <div class="form-group"><label class="form-label">평가 / 소견</label><textarea class="form-textarea" id="mEval" style="min-height:56px;" placeholder="관계 진전, 향후 계획..."></textarea></div>
+    <div class="form-group">
+      <label class="form-label">만남 평점</label>
+      <div class="star-input" id="meetingStars">
+        <button class="star-btn" onclick="setMStar(1)">☆</button><button class="star-btn" onclick="setMStar(2)">☆</button><button class="star-btn" onclick="setMStar(3)">☆</button><button class="star-btn" onclick="setMStar(4)">☆</button><button class="star-btn" onclick="setMStar(5)">☆</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('addMeetingModal')">취소</button>
+      <button class="btn btn-primary" onclick="saveMeeting()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- RELATION MODAL -->
+<div class="modal-overlay" id="addRelationModal">
+  <div class="modal">
+    <div class="modal-title">🔗 관계 설정</div>
+    <input type="hidden" id="relFromId">
+    <div class="form-group"><label class="form-label">상대방</label><select class="form-select" id="relToId"></select></div>
+    <div class="form-group">
+      <label class="form-label">친밀도 (1~100)</label>
+      <input class="form-input" id="relClose" type="range" min="1" max="100" value="50" oninput="document.getElementById('relCloseVal').textContent=this.value" style="padding:6px 0;">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-top:2px;"><span>소원</span><span id="relCloseVal">50</span><span>매우 친밀</span></div>
+    </div>
+    <div class="form-group"><label class="form-label">관계 유형</label><select class="form-select" id="relType"><option>동료</option><option>선후배</option><option>정치적동지</option><option>경쟁</option><option>가족</option><option>지인</option><option>후원</option></select></div>
+    <div class="form-group"><label class="form-label">메모</label><textarea class="form-textarea" id="relMemo" style="min-height:56px;" placeholder="관계 배경, 계기..."></textarea></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('addRelationModal')">취소</button>
+      <button class="btn btn-primary" onclick="saveRelation()">저장</button>
+    </div>
+  </div>
+</div>
+
+
+// ════════════════════════════════════════════════
+// REGION DATA
+// ════════════════════════════════════════════════
+const SIDO_SIGUNGU = {
+  "서울특별시":["종로구","중구","용산구","성동구","광진구","동대문구","중랑구","성북구","강북구","도봉구","노원구","은평구","서대문구","마포구","양천구","강서구","구로구","금천구","영등포구","동작구","관악구","서초구","강남구","송파구","강동구"],
+  "부산광역시":["중구","서구","동구","영도구","부산진구","동래구","남구","북구","해운대구","사하구","금정구","강서구","연제구","수영구","사상구","기장군"],
+  "대구광역시":["중구","동구","서구","남구","북구","수성구","달서구","달성군","군위군"],
+  "인천광역시":["중구","동구","미추홀구","연수구","남동구","부평구","계양구","서구","강화군","옹진군"],
+  "광주광역시":["동구","서구","남구","북구","광산구"],
+  "대전광역시":["동구","중구","서구","유성구","대덕구"],
+  "울산광역시":["중구","남구","동구","북구","울주군"],
+  "세종특별자치시":["세종시"],
+  "경기도":["수원시 장안구","수원시 권선구","수원시 팔달구","수원시 영통구","성남시 수정구","성남시 중원구","성남시 분당구","의정부시","안양시 만안구","안양시 동안구","부천시","광명시","평택시","동두천시","안산시 상록구","안산시 단원구","고양시 덕양구","고양시 일산동구","고양시 일산서구","과천시","구리시","남양주시","오산시","시흥시","군포시","의왕시","하남시","용인시 처인구","용인시 기흥구","용인시 수지구","파주시","이천시","안성시","김포시","화성시","광주시","양주시","포천시","여주시","연천군","가평군","양평군"],
+  "강원특별자치도":["춘천시","원주시","강릉시","동해시","태백시","속초시","삼척시","홍천군","횡성군","영월군","평창군","정선군","철원군","화천군","양구군","인제군","고성군","양양군"],
+  "충청북도":["청주시 상당구","청주시 서원구","청주시 흥덕구","청주시 청원구","충주시","제천시","보은군","옥천군","영동군","증평군","진천군","괴산군","음성군","단양군"],
+  "충청남도":["천안시 동남구","천안시 서북구","공주시","보령시","아산시","서산시","논산시","계룡시","당진시","금산군","부여군","서천군","청양군","홍성군","예산군","태안군"],
+  "전북특별자치도":["전주시 완산구","전주시 덕진구","군산시","익산시","정읍시","남원시","김제시","완주군","진안군","무주군","장수군","임실군","순창군","고창군","부안군"],
+  "전라남도":["목포시","여수시","순천시","나주시","광양시","담양군","곡성군","구례군","고흥군","보성군","화순군","장흥군","강진군","해남군","영암군","무안군","함평군","영광군","장성군","완도군","진도군","신안군"],
+  "경상북도":["포항시 남구","포항시 북구","경주시","김천시","안동시","구미시","영주시","영천시","상주시","문경시","경산시","의성군","청송군","영양군","영덕군","청도군","고령군","성주군","칠곡군","예천군","봉화군","울진군","울릉군"],
+  "경상남도":["창원시 의창구","창원시 성산구","창원시 마산합포구","창원시 마산회원구","창원시 진해구","진주시","통영시","사천시","김해시","밀양시","거제시","양산시","의령군","함안군","창녕군","고성군","남해군","하동군","산청군","함양군","거창군","합천군"],
+  "제주특별자치도":["제주시","서귀포시"]
+};
+const ALL_SIDO = Object.keys(SIDO_SIGUNGU);
+
+const POLITICAL_EVENTS = [
+  {id:'election25_support',icon:'🗳️',label:'25년 총선 지원',color:'#58a6ff'},
+  {id:'party_leader',icon:'👑',label:'당대표 선거 지원',color:'#d29922'},
+  {id:'local_election',icon:'🏙️',label:'지방선거 지원',color:'#3fb950'},
+  {id:'campaign_team',icon:'📣',label:'선거운동원',color:'#bc8cff'},
+  {id:'fundraising',icon:'💰',label:'후원금 기여',color:'#e3b341'},
+  {id:'media_support',icon:'📺',label:'언론 지지',color:'#39d353'},
+  {id:'org_mobilize',icon:'📋',label:'조직 동원',color:'#f85149'},
+  {id:'policy_collab',icon:'📜',label:'정책 협력',color:'#79c0ff'},
+];
+
+// ════════════════════════════════════════════════
+
+<!-- 로딩 오버레이 -->
+<div id="_loadingOverlay" style="position:fixed;inset:0;background:#0d1117;display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:16px;">
+  <div style="font-size:36px;">🏛️</div>
+  <div style="font-size:16px;font-family:'Noto Sans KR',sans-serif;color:#e6edf3;font-weight:600;">인맥 관리 시스템</div>
+  <div style="font-size:13px;color:#8b949e;font-family:'Noto Sans KR',sans-serif;">Firebase 연결 중...</div>
+  <div style="width:200px;height:3px;background:#21262d;border-radius:2px;overflow:hidden;margin-top:4px;">
+    <div style="height:100%;background:linear-gradient(90deg,#1f6feb,#bc8cff);border-radius:2px;animation:ldbar 1.5s ease-in-out infinite;"></div>
+  </div>
+</div>
+<style>@keyframes ldbar{0%{width:0%}60%{width:80%}100%{width:100%}}</style>
+
+<script type="module">
+// FIREBASE 설정 — 아래 YOUR_FIREBASE_CONFIG_HERE 부분을
+// Firebase 콘솔에서 복사한 firebaseConfig 객체로 교체하세요
+// ════════════════════════════════════════════════
+const firebaseConfig = YOUR_FIREBASE_CONFIG_HERE;
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, doc, getDoc, setDoc, onSnapshot, deleteDoc }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+// ════════════════════════════════════════════════
+// DATA — Firebase Firestore 실시간 동기화
+// ════════════════════════════════════════════════
+let persons   = [];
+let meetings  = [];
+let relations = [];
+let cats      = {
+  parties:['민주당','국민의힘','정의당','개혁신당','국민의당','진보당','무소속','기타'],
+  relTypes:['정치인','공무원','시민단체','언론','경제계','학계','종교','군인','법조계','의료계','기타'],
+};
+
+let selectedId=null, currentView='list', filteredPersons=[];
+let tempPolStar=0, tempLocStar=0, tempMeetStar=3;
+let _dbReady = false;
+
+const AVC=[
+  {bg:'rgba(88,166,255,.2)',border:'#58a6ff',text:'#79c0ff'},
+  {bg:'rgba(63,185,80,.2)',border:'#3fb950',text:'#56d364'},
+  {bg:'rgba(188,140,255,.2)',border:'#bc8cff',text:'#d2a8ff'},
+  {bg:'rgba(248,81,73,.2)',border:'#f85149',text:'#ff7b72'},
+  {bg:'rgba(210,153,34,.2)',border:'#d29922',text:'#e3b341'},
+  {bg:'rgba(57,211,83,.2)',border:'#39d353',text:'#39d353'},
+];
+const getAC=n=>{let s=0;for(let c of n)s+=c.charCodeAt(0);return AVC[s%AVC.length];};
+const genId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const starsStr=n=>'⭐'.repeat(n)+'☆'.repeat(5-n);
+const rf=p=>[p.sido,p.sigungu].filter(Boolean).join(' ');
+
+// ── Firestore 저장 ──
+async function save(){
+  try {
+    await setDoc(doc(db,'app','data'),{persons,meetings,relations,cats,updatedAt:Date.now()});
+  } catch(e){ console.error('저장 오류',e); showToast('저장 실패: '+e.message,'error'); }
+}
+
+// ── 토스트 알림 ──
+function showToast(msg, type='info'){
+  let t=document.getElementById('_toast');
+  if(!t){t=document.createElement('div');t.id='_toast';
+    t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:10px 18px;border-radius:8px;font-size:13px;font-family:inherit;z-index:9999;transition:opacity .3s;pointer-events:none;';
+    document.body.appendChild(t);}
+  t.textContent=msg;
+  t.style.background=type==='error'?'#f85149':type==='success'?'#3fb950':'#58a6ff';
+  t.style.color='#fff';t.style.opacity='1';
+  clearTimeout(t._tid);t._tid=setTimeout(()=>t.style.opacity='0',2800);
+}
+
+// ── 실시간 리스닝 ──
+function startRealtimeSync(){
+  const ref = doc(db,'app','data');
+  onSnapshot(ref, (snap)=>{
+    if(snap.exists()){
+      const d=snap.data();
+      persons  =d.persons   || [];
+      meetings =d.meetings  || [];
+      relations=d.relations || [];
+      if(d.cats)cats=d.cats;
+    }
+    if(!_dbReady){
+      _dbReady=true;
+      document.getElementById('_loadingOverlay').style.display='none';
+      populateFilters(); populateModal(); renderPersonList();
+    } else {
+      // 다른 사용자 변경 실시간 반영
+      renderPersonList();
+      if(currentView==='grid') renderGridView();
+      if(selectedId) showDetail(selectedId);
+      showToast('📡 데이터 동기화됨');
+    }
+  }, (err)=>{
+    console.error('Firestore 오류',err);
+    document.getElementById('_loadingOverlay').innerHTML=
+      '<div style="text-align:center;color:#f85149;font-size:14px;">⚠️ 데이터베이스 연결 실패<br><span style="font-size:12px;color:#8b949e;">Firebase 설정을 확인하세요</span></div>';
+  });
+}
+
+// ════════════════════════════════════════════════
+// SAMPLE DATA
+// ════════════════════════════════════════════════
+// 샘플 데이터는 Firebase 첫 실행 시 자동으로 초기화됩니다
+// (initSample은 Firebase 버전에서는 서버에서 관리)
+
+// ════════════════════════════════════════════════
+// DROPDOWNS
+// ════════════════════════════════════════════════
+function populateFilters(){
+  document.getElementById('filterParty').innerHTML='<option value="">전체 정당</option>'+cats.parties.map(p=>`<option>${p}</option>`).join('');
+  document.getElementById('filterSido').innerHTML='<option value="">전체 광역</option>'+ALL_SIDO.map(s=>`<option>${s}</option>`).join('');
+  document.getElementById('filterRelType').innerHTML='<option value="">전체 분류</option>'+cats.relTypes.map(r=>`<option>${r}</option>`).join('');
+}
+function populateModal(){
+  document.getElementById('pParty').innerHTML='<option value="">-</option>'+cats.parties.map(p=>`<option>${p}</option>`).join('');
+  document.getElementById('pRelation').innerHTML='<option value="">-</option>'+cats.relTypes.map(r=>`<option>${r}</option>`).join('');
+  document.getElementById('pSido').innerHTML='<option value="">-</option>'+ALL_SIDO.map(s=>`<option>${s}</option>`).join('');
+  document.getElementById('pSigungu').innerHTML='<option value="">-</option>';
+}
+function onPersonSidoChange(){
+  const v=document.getElementById('pSido').value;
+  document.getElementById('pSigungu').innerHTML='<option value="">-</option>'+(v&&SIDO_SIGUNGU[v]?SIDO_SIGUNGU[v].map(s=>`<option>${s}</option>`).join(''):'');
+}
+function onSidoFilter(){
+  const v=document.getElementById('filterSido').value;
+  document.getElementById('filterSigungu').innerHTML='<option value="">전체 시군구</option>'+(v&&SIDO_SIGUNGU[v]?SIDO_SIGUNGU[v].map(s=>`<option>${s}</option>`).join(''):'');
+  applyFilters();
+}
+
+// ════════════════════════════════════════════════
+// PERSON LIST
+// ════════════════════════════════════════════════
+function renderPersonList(){
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  const party=document.getElementById('filterParty').value;
+  const sido=document.getElementById('filterSido').value;
+  const sigungu=document.getElementById('filterSigungu').value;
+  const relT=document.getElementById('filterRelType').value;
+  const inf=document.getElementById('filterInfluence').value;
+  filteredPersons=persons.filter(p=>{
+    if(q&&!p.name.toLowerCase().includes(q)&&!(p.company||'').toLowerCase().includes(q)&&
+       !(p.party||'').includes(q)&&!(p.sido||'').includes(q)&&!(p.sigungu||'').includes(q))return false;
+    if(party&&p.party!==party)return false;
+    if(sido&&p.sido!==sido)return false;
+    if(sigungu&&p.sigungu!==sigungu)return false;
+    if(relT&&p.relation!==relT)return false;
+    if(inf&&p.politicalInfluence!==parseInt(inf))return false;
+    return true;
+  });
+  document.getElementById('personCount').textContent=filteredPersons.length+'명';
+  const list=document.getElementById('personList');
+  if(!filteredPersons.length){list.innerHTML='<div class="no-results">검색 결과 없음</div>';return;}
+  list.innerHTML=filteredPersons.map(p=>{
+    const ac=getAC(p.name);
+    const ic=p.politicalInfluence>=4?'#f85149':p.politicalInfluence>=3?'#d29922':'#3fb950';
+    const region=rf(p);
+    return`<div class="person-item${selectedId===p.id?' active':''}" onclick="selectPerson('${p.id}')">
+      <div class="avatar" style="background:${ac.bg};border-color:${ac.border};color:${ac.text}">${p.name.charAt(0)}</div>
+      <div class="person-info">
+        <div class="person-name">${p.name}</div>
+        <div class="person-meta">${[p.party,region,p.duty].filter(Boolean).join(' · ')||'—'}</div>
+      </div>
+      <div class="influence-dot" style="background:${ic}" title="정치영향력 ${p.politicalInfluence||0}"></div>
+    </div>`;
+  }).join('');
+}
+function selectPerson(id){selectedId=id;renderPersonList();if(currentView==='list')showDetail(id);}
+function applyFilters(){renderPersonList();if(currentView==='grid')renderGridView();}
+
+// ════════════════════════════════════════════════
+// DETAIL
+// ════════════════════════════════════════════════
+function showDetail(id){
+  const p=persons.find(x=>x.id===id);if(!p)return;
+  ['emptyState','gridView','networkView','adminView'].forEach(i=>document.getElementById(i).style.display='none');
+  const dv=document.getElementById('detailView');dv.style.display='block';
+  const ac=getAC(p.name),pM=meetings.filter(m=>m.personId===id),pR=relations.filter(r=>r.fromId===id||r.toId===id);
+  const PC={'민주당':'#58a6ff','국민의힘':'#f85149','정의당':'#3fb950','개혁신당':'#e3b341','무소속':'#8b949e'};
+  const pc=PC[p.party]||'#8b949e';const region=rf(p);
+  dv.innerHTML=`<div class="detail-view fade-in">
+    <div class="detail-hero">
+      <div class="detail-avatar" style="background:${ac.bg};border-color:${ac.border};color:${ac.text}">${p.name.charAt(0)}</div>
+      <div style="flex:1;">
+        <div class="detail-name">${p.name}</div>
+        <div class="detail-role">${[p.company,p.duty].filter(Boolean).join(' · ')||'소속 미입력'}</div>
+        <div class="tags">
+          ${p.party?`<span class="tag" style="background:${pc}22;border-color:${pc}66;color:${pc}">🏛️ ${p.party}</span>`:''}
+          ${region?`<span class="tag tag-blue">📍 ${region}</span>`:''}
+          ${p.sex?`<span class="tag tag-blue">${p.sex==='남'?'♂':'♀'} ${p.sex}</span>`:''}
+          ${p.relation?`<span class="tag tag-purple">${p.relation}</span>`:''}
+          ${p.birth?`<span class="tag tag-yellow">🎂 ${p.birth}</span>`:''}
+          ${p.phone?`<span class="tag tag-green">📱 ${p.phone}</span>`:''}
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end;flex-shrink:0;">
+        <button class="btn btn-primary" onclick="openEditModal('${p.id}')">✏️ 수정</button>
+        <button class="btn btn-green" onclick="openMeetingModal('${p.id}')">＋ 만남 기록</button>
+        <button class="btn" onclick="openRelationModal('${p.id}')">🔗 관계 설정</button>
+        <button class="btn btn-red" onclick="deletePerson('${p.id}')">🗑 삭제</button>
+      </div>
+    </div>
+    ${p.memo?`<div style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:16px;font-size:13px;line-height:1.7;color:var(--text2);">💬 ${p.memo}</div>`:''}
+    <div class="section-card">
+      <div class="section-title">📊 영향력 지표</div>
+      <div class="influence-grid">
+        ${[{l:'정치적 영향력',v:p.politicalInfluence||0,g:'#f85149,#ff7b72',c:'var(--red)'},
+           {l:'지역 영향력',v:p.localInfluence||0,g:'#3fb950,#56d364',c:'var(--green)'},
+           {l:'만남 횟수',v:Math.min(pM.length,5),d:pM.length+'회',g:'#58a6ff,#79c0ff',c:'var(--accent)'},
+           {l:'관계 네트워크',v:Math.min(pR.length,5),d:pR.length+'명',g:'#bc8cff,#d2a8ff',c:'var(--purple)'}
+        ].map(i=>`<div class="influence-item">
+          <div class="influence-label">${i.l}</div>
+          <div class="influence-bar"><div class="influence-fill" style="width:${i.v*20}%;background:linear-gradient(90deg,${i.g})"></div></div>
+          <div class="influence-value"><span>${i.d||starsStr(i.v)}</span><span style="color:${i.c}">${i.d||i.v+'/5'}</span></div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div class="section-card">
+      <div class="section-title">🗳️ 정치 활동 이력 <span style="font-size:11px;font-weight:400;text-transform:none;color:var(--text3);">클릭하여 ON/OFF</span></div>
+      <div class="events-grid">
+        ${POLITICAL_EVENTS.map(ev=>{const active=(p.events||[]).includes(ev.id);
+          return`<div class="event-badge ${active?'active':''}" style="background:${active?ev.color+'22':'var(--bg3)'};border-color:${active?ev.color:'var(--border)'};color:${active?ev.color:'var(--text3)'};" onclick="toggleEvent('${p.id}','${ev.id}')">${ev.icon} ${ev.label}</div>`;
+        }).join('')}
+      </div>
+    </div>
+    <div class="section-card">
+      <div class="section-title">🔗 관계 현황</div>
+      ${!pR.length?'<div style="color:var(--text3);font-size:13px;">등록된 관계 없음</div>':
+        pR.map(r=>{const oId=r.fromId===id?r.toId:r.fromId;const o=persons.find(x=>x.id===oId);if(!o)return'';
+          return`<div class="relation-item">
+            <div class="rel-name" onclick="selectPerson('${o.id}')">${o.name}</div>
+            <div class="closeness-track" onclick="editCloseness('${r.id}',event)"><div class="closeness-fill" style="width:${r.closeness}%"></div></div>
+            <div class="closeness-value">${r.closeness}%</div>
+            <span class="tag tag-purple" style="font-size:11px;padding:2px 7px;">${r.type}</span>
+            <button class="btn btn-sm" onclick="deleteRelation('${r.id}')">삭제</button>
+          </div>`;}).join('')}
+    </div>
+    <div class="section-card">
+      <div class="section-title">📅 만남 기록</div>
+      ${!pM.length?'<div style="color:var(--text3);font-size:13px;">아직 만남 기록이 없습니다</div>':
+        pM.sort((a,b)=>b.date.localeCompare(a.date)).map(m=>`<div class="meeting-card">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div class="meeting-date">📅 ${m.date}</div>
+            <div style="display:flex;align-items:center;gap:8px;"><span>${'⭐'.repeat(m.rating||0)}</span><button class="btn btn-sm" onclick="deleteMeeting('${m.id}')">삭제</button></div>
+          </div>
+          <div class="meeting-details">
+            ${m.place?`<div class="meeting-detail-item">📍 ${m.place}</div>`:''}
+            ${m.with?`<div class="meeting-detail-item">👥 동석: ${m.with}</div>`:''}
+          </div>
+          ${m.memo?`<div class="meeting-memo">${m.memo}</div>`:''}
+          ${m.eval?`<div class="meeting-eval">💡 평가: ${m.eval}</div>`:''}
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+// ════════════════════════════════════════════════
+// GRID VIEW
+// ════════════════════════════════════════════════
+function renderGridView(){
+  const gv=document.getElementById('gridView');gv.style.display='grid';
+  const PC={'민주당':'#58a6ff','국민의힘':'#f85149','정의당':'#3fb950','무소속':'#8b949e'};
+  gv.innerHTML=filteredPersons.map(p=>{
+    const ac=getAC(p.name),pc=PC[p.party]||'#8b949e',region=rf(p);
+    return`<div class="grid-card" onclick="selectPerson('${p.id}');switchView('list')">
+      <div class="grid-card-header">
+        <div class="avatar" style="background:${ac.bg};border-color:${ac.border};color:${ac.text}">${p.name.charAt(0)}</div>
+        <div><div style="font-size:14px;font-weight:600">${p.name}</div><div style="font-size:11px;color:var(--text2)">${p.duty||'직책미상'}</div></div>
+      </div>
+      <div style="font-size:12px;color:var(--text2);margin-bottom:8px;">${p.company||'소속미상'}</div>
+      <div class="tags" style="margin-bottom:8px;">
+        ${p.party?`<span class="tag" style="background:${pc}22;border-color:${pc}55;color:${pc};padding:1px 7px;">${p.party}</span>`:''}
+        ${region?`<span class="tag tag-blue" style="padding:1px 7px;">${region}</span>`:''}
+        ${p.relation?`<span class="tag tag-purple" style="padding:1px 7px;">${p.relation}</span>`:''}
+      </div>
+      <div style="font-size:11px;color:var(--text3);display:flex;gap:10px;margin-bottom:6px;">
+        <span>정치: ${starsStr(p.politicalInfluence||0)}</span><span>지역: ${starsStr(p.localInfluence||0)}</span>
+      </div>
+      ${(p.events||[]).length?`<div style="font-size:15px;">${p.events.map(e=>POLITICAL_EVENTS.find(x=>x.id===e)?.icon||'').join(' ')}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════
+// NETWORK
+// ════════════════════════════════════════════════
+let netNodes=[],netEdges=[],netDrag=null,netOffX=0,netOffY=0,netScale=1,isPan=false,panS=null,nMX=0,nMY=0;
+function renderNetwork(){
+  const nv=document.getElementById('networkView');nv.style.display='flex';
+  const c=document.getElementById('networkCanvas');c.width=nv.offsetWidth;c.height=nv.offsetHeight;
+  netNodes=persons.map((p,i)=>{const a=(i/persons.length)*Math.PI*2,r=Math.min(c.width,c.height)*.32;
+    return{id:p.id,name:p.name,x:c.width/2+Math.cos(a)*r,y:c.height/2+Math.sin(a)*r,size:8+(p.politicalInfluence||0)*3,color:getAC(p.name)};});
+  netEdges=relations.map(r=>({from:r.fromId,to:r.toId,closeness:r.closeness,type:r.type}));
+  drawNet();
+  c.onmousedown=e=>{const pos=mp(c,e);const n=nodeAt(pos.x,pos.y);if(n){netDrag=n;nMX=pos.x-n.x;nMY=pos.y-n.y;}else{isPan=true;panS={x:e.clientX-netOffX,y:e.clientY-netOffY};}c.style.cursor='grabbing';};
+  c.onmousemove=e=>{const pos=mp(c,e);if(netDrag){netDrag.x=pos.x-nMX;netDrag.y=pos.y-nMY;drawNet();}
+    else if(isPan){netOffX=e.clientX-panS.x;netOffY=e.clientY-panS.y;drawNet();}
+    else{const n=nodeAt(pos.x,pos.y);const tt=document.getElementById('netTooltip');
+      if(n){const p=persons.find(x=>x.id===n.id);tt.style.display='block';tt.style.left=(e.offsetX+14)+'px';tt.style.top=(e.offsetY+14)+'px';tt.textContent=`${n.name} | ${p?.party||'무소속'} | ${rf(p||{})}`;c.style.cursor='pointer';}
+      else{tt.style.display='none';c.style.cursor='grab';}}};
+  c.onmouseup=()=>{netDrag=null;isPan=false;c.style.cursor='grab';};
+  c.onclick=e=>{const pos=mp(c,e);const n=nodeAt(pos.x,pos.y);if(n){selectedId=n.id;switchView('list');}};
+  c.onwheel=e=>{e.preventDefault();netScale=Math.max(.3,Math.min(3,netScale*(e.deltaY>0?.9:1.1)));drawNet();};
+}
+const mp=(c,e)=>{const r=c.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top};};
+const nodeAt=(mx,my)=>{for(const n of netNodes){const dx=mx-(n.x*netScale+netOffX),dy=my-(n.y*netScale+netOffY);if(Math.sqrt(dx*dx+dy*dy)<n.size*netScale+5)return n;}return null;};
+function drawNet(){
+  const c=document.getElementById('networkCanvas'),ctx=c.getContext('2d');
+  ctx.clearRect(0,0,c.width,c.height);ctx.save();ctx.translate(netOffX,netOffY);ctx.scale(netScale,netScale);
+  netEdges.forEach(e=>{const a=netNodes.find(n=>n.id===e.from),b=netNodes.find(n=>n.id===e.to);if(!a||!b)return;
+    const al=.1+(e.closeness/100)*.7;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+    ctx.strokeStyle=`rgba(88,166,255,${al})`;ctx.lineWidth=.5+(e.closeness/100)*3;ctx.stroke();
+    ctx.fillStyle=`rgba(88,166,255,${al+.1})`;ctx.font='10px sans-serif';ctx.fillText(e.closeness+'%',(a.x+b.x)/2,(a.y+b.y)/2);});
+  netNodes.forEach(n=>{const sel=selectedId===n.id;
+    ctx.beginPath();ctx.arc(n.x,n.y,n.size+(sel?4:0),0,Math.PI*2);ctx.fillStyle=sel?n.color.border:n.color.bg;ctx.fill();
+    ctx.strokeStyle=n.color.border;ctx.lineWidth=sel?3:1.5;ctx.stroke();
+    ctx.fillStyle=n.color.text;ctx.font=`${sel?13:11}px "Noto Sans KR",sans-serif`;ctx.textAlign='center';ctx.fillText(n.name,n.x,n.y+n.size+14);});
+  ctx.restore();
+}
+
+// ════════════════════════════════════════════════
+// ADMIN
+// ════════════════════════════════════════════════
+let openSido=null;
+function renderAdmin(){
+  const av=document.getElementById('adminView');av.style.display='block';
+  const mkSec=(key,title,icon)=>`<div class="admin-card">
+    <div class="admin-card-title">${icon} ${title}</div>
+    <div class="tag-list">${(cats[key]||[]).map((v,i)=>`<div class="editable-tag"><span>${v}</span><button class="del-btn" onclick="delCat('${key}',${i})">×</button></div>`).join('')}</div>
+    <div class="add-tag-row">
+      <input class="add-tag-input" id="ai_${key}" placeholder="${title} 항목 추가..." onkeydown="if(event.key==='Enter')addCat('${key}')">
+      <button class="btn btn-primary" style="font-size:12px;padding:6px 12px;" onclick="addCat('${key}')">＋ 추가</button>
+    </div>
+  </div>`;
+
+  const sidoBlocks=ALL_SIDO.map(s=>{const isOpen=openSido===s;
+    return`<div class="sido-chip ${isOpen?'open':''}" onclick="toggleSido('${s}')">
+      <div class="sido-chip-name">${s}</div>
+      <div class="sido-chip-count">${SIDO_SIGUNGU[s].length}개 시·군·구</div>
+      ${isOpen?`<div class="sigungu-list">${SIDO_SIGUNGU[s].map(sg=>`<span class="sigungu-item">${sg}</span>`).join('')}</div>`:''}
+    </div>`;}).join('');
+
+  av.innerHTML=`<div class="admin-wrap">
+    <div class="admin-page-title">⚙️ 관리자 설정</div>
+    <div class="admin-page-sub">정당, 관계 분류 등 드롭다운 항목을 편집합니다. 변경사항은 즉시 반영됩니다.</div>
+    <div class="admin-sections">${mkSec('parties','정당 목록','🏛️')}${mkSec('relTypes','관계 분류','🔖')}</div>
+
+    <div class="divider"></div>
+    <div style="margin-bottom:14px;">
+      <div style="font-size:14px;font-weight:700;margin-bottom:4px;">📍 지역 데이터 — 기초지방자치단체</div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:12px;">총 ${Object.values(SIDO_SIGUNGU).flat().length}개 기초자치단체 내장. 클릭하면 시·군·구 목록이 펼쳐집니다.</div>
+      <div class="region-preview-grid">${sidoBlocks}</div>
+    </div>
+
+    <div class="divider"></div>
+    <div>
+      <div style="font-size:14px;font-weight:700;margin-bottom:12px;">🗄️ 데이터 관리</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+        <button class="btn" onclick="exportData()">📥 JSON 내보내기</button>
+        <button class="btn" onclick="document.getElementById('importFile').click()">📤 JSON 가져오기</button>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+        <button class="btn btn-red" onclick="clearAll()">🗑 전체 초기화</button>
+      </div>
+      <div style="padding:12px 16px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text2);">
+        인물 <strong style="color:var(--text)">${persons.length}명</strong> · 만남 기록 <strong style="color:var(--text)">${meetings.length}건</strong> · 관계 설정 <strong style="color:var(--text)">${relations.length}건</strong>
+      </div>
+    </div>
+  </div>`;
+}
+function toggleSido(s){openSido=openSido===s?null:s;renderAdmin();}
+function addCat(key){const inp=document.getElementById('ai_'+key);const v=inp.value.trim();if(!v)return;if(!cats[key].includes(v))cats[key].push(v);inp.value='';save();renderAdmin();populateFilters();populateModal();}
+function delCat(key,idx){cats[key].splice(idx,1);save();renderAdmin();populateFilters();populateModal();}
+function exportData(){
+  const blob=new Blob([JSON.stringify({persons,meetings,relations,cats},null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='인맥관리_'+new Date().toISOString().slice(0,10)+'.json';a.click();
+}
+function importData(e){
+  const f=e.target.files[0];if(!f)return;
+  const fr=new FileReader();fr.onload=ev=>{try{const d=JSON.parse(ev.target.result);
+    if(d.persons)persons=d.persons;if(d.meetings)meetings=d.meetings;
+    if(d.relations)relations=d.relations;if(d.cats)cats=d.cats;
+    save();renderPersonList();populateFilters();populateModal();renderAdmin();alert('가져오기 완료!');}
+  catch{alert('올바른 JSON 파일이 아닙니다.');}};fr.readAsText(f);
+}
+async function clearAll(){if(!confirm('모든 데이터를 초기화합니까? 되돌릴 수 없습니다.'))return;persons=[];meetings=[];relations=[];await save();selectedId=null;renderPersonList();renderAdmin();showToast('초기화 완료','success');}
+
+// ════════════════════════════════════════════════
+// VIEW SWITCH
+// ════════════════════════════════════════════════
+function switchView(view){
+  currentView=view;
+  document.querySelectorAll('.view-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+view).classList.add('active');
+  const sb=document.getElementById('sidebarEl');
+  sb.style.display=(view==='network'||view==='admin')?'none':'';
+  ['emptyState','detailView','gridView','networkView','adminView'].forEach(i=>document.getElementById(i).style.display='none');
+  if(view==='list'){if(selectedId)showDetail(selectedId);else document.getElementById('emptyState').style.display='flex';}
+  else if(view==='grid'){renderPersonList();renderGridView();}
+  else if(view==='network')renderNetwork();
+  else if(view==='admin')renderAdmin();
+}
+
+// ════════════════════════════════════════════════
+// MODALS
+// ════════════════════════════════════════════════
+function openModal(id){document.getElementById(id).classList.add('show');}
+function closeModal(id){document.getElementById(id).classList.remove('show');}
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show');}));
+
+function openAddPersonModal(){
+  document.getElementById('editPersonId').value='';
+  ['pName','pCompany','pDuty','pPhone','pMemo'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('pSex').value='';document.getElementById('pBirth').value='';
+  document.getElementById('pParty').value='';document.getElementById('pRelation').value='';
+  document.getElementById('pSido').value='';document.getElementById('pSigungu').innerHTML='<option value="">-</option>';
+  tempPolStar=0;tempLocStar=0;updateStarUI('pPoliticalStars',0);updateStarUI('pLocalStars',0);
+  document.getElementById('personModalTitle').textContent='👤 인물 추가';
+  openModal('addPersonModal');
+}
+function openEditModal(id){
+  const p=persons.find(x=>x.id===id);if(!p)return;
+  document.getElementById('editPersonId').value=p.id;
+  document.getElementById('pName').value=p.name||'';document.getElementById('pCompany').value=p.company||'';
+  document.getElementById('pDuty').value=p.duty||'';document.getElementById('pPhone').value=p.phone||'';
+  document.getElementById('pMemo').value=p.memo||'';document.getElementById('pSex').value=p.sex||'';
+  document.getElementById('pBirth').value=p.birth||'';document.getElementById('pParty').value=p.party||'';
+  document.getElementById('pRelation').value=p.relation||'';document.getElementById('pSido').value=p.sido||'';
+  if(p.sido&&SIDO_SIGUNGU[p.sido]){
+    document.getElementById('pSigungu').innerHTML='<option value="">-</option>'+SIDO_SIGUNGU[p.sido].map(s=>`<option>${s}</option>`).join('');
+    document.getElementById('pSigungu').value=p.sigungu||'';
+  }else document.getElementById('pSigungu').innerHTML='<option value="">-</option>';
+  tempPolStar=p.politicalInfluence||0;tempLocStar=p.localInfluence||0;
+  updateStarUI('pPoliticalStars',tempPolStar);updateStarUI('pLocalStars',tempLocStar);
+  document.getElementById('personModalTitle').textContent='✏️ 인물 수정';
+  openModal('addPersonModal');
+}
+function setPStar(type,val){if(type==='political'){tempPolStar=val;updateStarUI('pPoliticalStars',val);}else{tempLocStar=val;updateStarUI('pLocalStars',val);}}
+function updateStarUI(id,val){document.getElementById(id).querySelectorAll('.star-btn').forEach((b,i)=>b.textContent=i<val?'⭐':'☆');}
+function savePerson(){
+  const name=document.getElementById('pName').value.trim();if(!name){alert('이름을 입력하세요');return;}
+  const editId=document.getElementById('editPersonId').value;
+  const data={name,company:document.getElementById('pCompany').value,duty:document.getElementById('pDuty').value,
+    phone:document.getElementById('pPhone').value,memo:document.getElementById('pMemo').value,
+    sex:document.getElementById('pSex').value,birth:document.getElementById('pBirth').value,
+    party:document.getElementById('pParty').value,relation:document.getElementById('pRelation').value,
+    sido:document.getElementById('pSido').value,sigungu:document.getElementById('pSigungu').value,
+    politicalInfluence:tempPolStar,localInfluence:tempLocStar};
+  if(editId){const p=persons.find(x=>x.id===editId);if(p)Object.assign(p,data);}
+  else persons.push({id:genId(),...data,events:[],createdAt:new Date().toISOString()});
+  save();closeModal('addPersonModal');renderPersonList();
+  if(editId&&selectedId===editId)showDetail(editId);
+}
+function deletePerson(id){
+  if(!confirm('이 인물을 삭제하시겠습니까?'))return;
+  persons=persons.filter(p=>p.id!==id);meetings=meetings.filter(m=>m.personId!==id);relations=relations.filter(r=>r.fromId!==id&&r.toId!==id);
+  save();selectedId=null;renderPersonList();document.getElementById('detailView').style.display='none';document.getElementById('emptyState').style.display='flex';
+}
+function openMeetingModal(pid){
+  document.getElementById('meetingPersonId').value=pid;document.getElementById('mDate').value=new Date().toISOString().slice(0,10);
+  ['mPlace','mWith','mMemo','mEval'].forEach(id=>document.getElementById(id).value='');
+  tempMeetStar=3;updateStarUI('meetingStars',3);openModal('addMeetingModal');
+}
+function setMStar(val){tempMeetStar=val;updateStarUI('meetingStars',val);}
+function saveMeeting(){
+  const pid=document.getElementById('meetingPersonId').value,date=document.getElementById('mDate').value;
+  if(!date){alert('날짜를 입력하세요');return;}
+  meetings.push({id:genId(),personId:pid,date,place:document.getElementById('mPlace').value,
+    with:document.getElementById('mWith').value,memo:document.getElementById('mMemo').value,
+    eval:document.getElementById('mEval').value,rating:tempMeetStar,createdAt:new Date().toISOString()});
+  save();closeModal('addMeetingModal');if(selectedId===pid)showDetail(pid);
+}
+function deleteMeeting(id){if(!confirm('삭제하시겠습니까?'))return;meetings=meetings.filter(m=>m.id!==id);save();showDetail(selectedId);}
+function openRelationModal(fromId){
+  document.getElementById('relFromId').value=fromId;
+  document.getElementById('relToId').innerHTML=persons.filter(p=>p.id!==fromId).map(p=>`<option value="${p.id}">${p.name} (${p.party||'무소속'} / ${rf(p)||'지역미상'})</option>`).join('');
+  document.getElementById('relClose').value=50;document.getElementById('relCloseVal').textContent=50;document.getElementById('relMemo').value='';
+  openModal('addRelationModal');
+}
+function saveRelation(){
+  const fromId=document.getElementById('relFromId').value,toId=document.getElementById('relToId').value;
+  const dup=relations.find(r=>(r.fromId===fromId&&r.toId===toId)||(r.fromId===toId&&r.toId===fromId));
+  if(dup){if(!confirm('이미 관계가 있습니다. 업데이트하시겠습니까?'))return;relations=relations.filter(r=>r.id!==dup.id);}
+  relations.push({id:genId(),fromId,toId,closeness:parseInt(document.getElementById('relClose').value),
+    type:document.getElementById('relType').value,memo:document.getElementById('relMemo').value});
+  save();closeModal('addRelationModal');showDetail(selectedId);
+}
+function deleteRelation(id){if(!confirm('삭제하시겠습니까?'))return;relations=relations.filter(r=>r.id!==id);save();showDetail(selectedId);}
+function editCloseness(rId,event){
+  const r=relations.find(x=>x.id===rId);if(!r)return;
+  const rect=event.currentTarget.getBoundingClientRect();
+  r.closeness=Math.max(1,Math.min(100,Math.round(((event.clientX-rect.left)/rect.width)*100)));
+  save();showDetail(selectedId);
+}
+function toggleEvent(pid,evId){
+  const p=persons.find(x=>x.id===pid);if(!p)return;if(!p.events)p.events=[];
+  const i=p.events.indexOf(evId);if(i>=0)p.events.splice(i,1);else p.events.push(evId);
+  save();showDetail(pid);
+}
+
+document.getElementById('searchInput').addEventListener('input',()=>{renderPersonList();if(currentView==='grid')renderGridView();});
+
+// INIT — Firebase 실시간 동기화 시작
+startRealtimeSync();
+
+</script>
+</body>
+</html>
