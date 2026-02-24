@@ -18,7 +18,6 @@
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
-
   .topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;gap:16px;position:sticky;top:0;z-index:200;}
   .topbar-logo{font-family:'Noto Serif KR',serif;font-size:17px;font-weight:600;color:var(--accent);white-space:nowrap;}
   .topbar-search{flex:1;max-width:480px;position:relative;}
@@ -27,7 +26,6 @@
   .topbar-search input::placeholder{color:var(--text3);}
   .search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px;pointer-events:none;}
   .topbar-actions{margin-left:auto;display:flex;gap:8px;}
-
   .btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:6px;font-size:13px;font-family:inherit;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--bg4);color:var(--text);transition:all .15s;white-space:nowrap;}
   .btn:hover{background:var(--bg3);border-color:var(--border2);}
   .btn-primary{background:var(--accent2);border-color:transparent;color:#fff;}
@@ -35,14 +33,11 @@
   .btn-green{background:rgba(63,185,80,.15);border-color:var(--green);color:var(--green);}
   .btn-red{background:rgba(248,81,73,.12);border-color:var(--red);color:var(--red);}
   .btn-sm{padding:3px 8px;font-size:11px;}
-
   .view-tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;}
   .view-tab{padding:12px 18px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:none;color:var(--text2);font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;display:flex;align-items:center;gap:5px;}
   .view-tab:hover{color:var(--text);}
   .view-tab.active{color:var(--accent);border-bottom-color:var(--accent);}
-
   .layout{display:flex;flex:1;height:calc(100vh - 104px);overflow:hidden;}
-
   .sidebar{width:295px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;}
   .sidebar-header{padding:12px 14px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
   .sidebar-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text2);}
@@ -51,7 +46,6 @@
   .filter-row{display:flex;gap:5px;}
   .filter-select{background:var(--bg3);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:12px;font-family:inherit;padding:5px 8px;width:100%;outline:none;cursor:pointer;}
   .filter-select:focus{border-color:var(--accent2);}
-
   .person-list{flex:1;overflow-y:auto;padding:4px 0;}
   .person-list::-webkit-scrollbar{width:3px;}
   .person-list::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
@@ -63,11 +57,9 @@
   .person-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
   .person-meta{font-size:11px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}
   .influence-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-
   .main{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
   .main::-webkit-scrollbar{width:5px;}
   .main::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
-
   .detail-view{flex:1;padding:24px 28px;max-width:980px;}
   .detail-hero{display:flex;gap:20px;align-items:flex-start;margin-bottom:22px;}
   .detail-avatar{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;flex-shrink:0;border:3px solid;}
@@ -80,23 +72,19 @@
   .tag-yellow{background:rgba(210,153,34,.12);border-color:rgba(210,153,34,.4);color:var(--yellow);}
   .tag-purple{background:rgba(188,140,255,.12);border-color:rgba(188,140,255,.4);color:var(--purple);}
   .tag-red{background:rgba(248,81,73,.12);border-color:rgba(248,81,73,.4);color:var(--red);}
-
   .section-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:16px;}
   .section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text2);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px;}
-
   .influence-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;}
   .influence-item{display:flex;flex-direction:column;gap:5px;}
   .influence-label{font-size:12px;color:var(--text2);}
   .influence-bar{height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;}
   .influence-fill{height:100%;border-radius:3px;transition:width .6s cubic-bezier(.4,0,.2,1);}
   .influence-value{font-size:11px;font-weight:600;display:flex;justify-content:space-between;}
-
   .events-grid{display:flex;flex-wrap:wrap;gap:8px;}
   .event-badge{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:8px;font-size:12px;font-weight:500;cursor:pointer;border:2px solid;transition:all .2s;user-select:none;}
   .event-badge.active{box-shadow:0 0 10px rgba(88,166,255,.2);}
   .event-badge:not(.active){opacity:.4;filter:grayscale(.5);}
   .event-badge:hover{opacity:1;filter:none;}
-
   .relation-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
   .relation-item:last-child{border-bottom:none;}
   .rel-name{width:88px;font-size:13px;font-weight:500;flex-shrink:0;cursor:pointer;color:var(--accent);}
@@ -104,16 +92,13 @@
   .closeness-track{flex:1;height:7px;background:var(--bg3);border-radius:4px;cursor:pointer;position:relative;}
   .closeness-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent2),var(--purple));transition:width .3s;}
   .closeness-value{width:30px;font-size:11px;font-weight:600;color:var(--text2);text-align:right;}
-
   .meeting-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:9px;border-left:3px solid var(--accent2);}
   .meeting-date{font-size:12px;color:var(--accent);font-weight:600;}
   .meeting-details{display:flex;gap:14px;margin:5px 0;flex-wrap:wrap;}
   .meeting-detail-item{font-size:12px;color:var(--text2);}
   .meeting-memo{font-size:13px;line-height:1.65;background:var(--bg4);border-radius:6px;padding:9px 11px;margin-top:7px;}
   .meeting-eval{margin-top:6px;padding:7px 11px;background:rgba(63,185,80,.08);border:1px solid rgba(63,185,80,.2);border-radius:6px;font-size:12px;color:var(--green);}
-
   .empty-state{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text3);gap:10px;padding:60px;}
-
   .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;pointer-events:none;transition:opacity .2s;}
   .modal-overlay.show{opacity:1;pointer-events:all;}
   .modal{background:var(--bg2);border:1px solid var(--border2);border-radius:14px;padding:26px;width:580px;max-width:96vw;max-height:90vh;overflow-y:auto;transform:translateY(20px);transition:transform .2s;box-shadow:var(--card-shadow);}
@@ -130,16 +115,12 @@
   .star-input{display:flex;gap:3px;}
   .star-btn{font-size:20px;cursor:pointer;transition:transform .1s;background:none;border:none;padding:0;}
   .star-btn:hover{transform:scale(1.15);}
-
   .grid-view{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;padding:20px;}
   .grid-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:all .2s;}
   .grid-card:hover{border-color:var(--accent2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3);}
   .grid-card-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
-
   .network-view{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
   .net-tooltip{position:absolute;background:var(--bg4);border:1px solid var(--border2);border-radius:6px;padding:6px 10px;font-size:12px;pointer-events:none;z-index:100;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,.4);display:none;}
-
-  /* ── ADMIN ── */
   .admin-wrap{flex:1;overflow-y:auto;padding:28px 32px;max-width:940px;}
   .admin-page-title{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:600;margin-bottom:4px;}
   .admin-page-sub{font-size:13px;color:var(--text2);margin-bottom:24px;}
@@ -153,7 +134,6 @@
   .add-tag-row{display:flex;gap:6px;}
   .add-tag-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--text);font-size:12px;font-family:inherit;outline:none;transition:border-color .2s;}
   .add-tag-input:focus{border-color:var(--accent2);}
-
   .region-preview-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}
   .sido-chip{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:12px;cursor:pointer;transition:border-color .15s;}
   .sido-chip:hover{border-color:var(--accent);}
@@ -162,13 +142,13 @@
   .sido-chip-count{color:var(--text3);font-size:11px;}
   .sigungu-list{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;padding:8px;background:var(--bg3);border-radius:6px;max-height:120px;overflow-y:auto;}
   .sigungu-item{font-size:11px;color:var(--text2);padding:2px 7px;background:var(--bg4);border-radius:4px;}
-
   .divider{height:1px;background:var(--border);margin:18px 0;}
   ::-webkit-scrollbar{width:4px;height:4px;}
   ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px;}
   @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
   .fade-in{animation:fadeIn .25s ease;}
   .no-results{text-align:center;padding:36px;color:var(--text3);font-size:13px;}
+  @keyframes ldbar{0%{width:0%}60%{width:80%}100%{width:100%}}
 </style>
 </head>
 <body>
@@ -198,20 +178,12 @@
       <span class="person-count" id="personCount">0명</span>
     </div>
     <div class="filter-bar">
-      <select class="filter-select" id="filterParty" onchange="applyFilters()">
-        <option value="">전체 정당</option>
-      </select>
+      <select class="filter-select" id="filterParty" onchange="applyFilters()"><option value="">전체 정당</option></select>
       <div class="filter-row">
-        <select class="filter-select" id="filterSido" onchange="onSidoFilter()">
-          <option value="">전체 광역</option>
-        </select>
-        <select class="filter-select" id="filterSigungu" onchange="applyFilters()">
-          <option value="">전체 시군구</option>
-        </select>
+        <select class="filter-select" id="filterSido" onchange="onSidoFilter()"><option value="">전체 광역</option></select>
+        <select class="filter-select" id="filterSigungu" onchange="applyFilters()"><option value="">전체 시군구</option></select>
       </div>
-      <select class="filter-select" id="filterRelType" onchange="applyFilters()">
-        <option value="">전체 분류</option>
-      </select>
+      <select class="filter-select" id="filterRelType" onchange="applyFilters()"><option value="">전체 분류</option></select>
       <select class="filter-select" id="filterInfluence" onchange="applyFilters()">
         <option value="">전체 영향력</option>
         <option value="5">⭐⭐⭐⭐⭐ 최고</option>
@@ -223,7 +195,6 @@
     </div>
     <div class="person-list" id="personList"></div>
   </div>
-
   <div class="main" id="mainContent">
     <div class="empty-state" id="emptyState">
       <div style="font-size:44px;">🏛️</div>
@@ -258,14 +229,8 @@
       <div class="form-group"><label class="form-label">관계 분류</label><select class="form-select" id="pRelation"></select></div>
     </div>
     <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">광역시도</label>
-        <select class="form-select" id="pSido" onchange="onPersonSidoChange()"></select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">시 · 군 · 구</label>
-        <select class="form-select" id="pSigungu"></select>
-      </div>
+      <div class="form-group"><label class="form-label">광역시도</label><select class="form-select" id="pSido" onchange="onPersonSidoChange()"></select></div>
+      <div class="form-group"><label class="form-label">시 · 군 · 구</label><select class="form-select" id="pSigungu"></select></div>
     </div>
     <div class="form-row">
       <div class="form-group"><label class="form-label">휴대폰</label><input class="form-input" id="pPhone" placeholder="010-0000-0000"></div>
@@ -338,10 +303,33 @@
   </div>
 </div>
 
+<!-- 로딩 오버레이 -->
+<div id="_loadingOverlay" style="position:fixed;inset:0;background:#0d1117;display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:16px;">
+  <div style="font-size:36px;">🏛️</div>
+  <div style="font-size:16px;font-family:'Noto Sans KR',sans-serif;color:#e6edf3;font-weight:600;">인맥 관리 시스템</div>
+  <div style="font-size:13px;color:#8b949e;font-family:'Noto Sans KR',sans-serif;">Firebase 연결 중...</div>
+  <div style="width:200px;height:3px;background:#21262d;border-radius:2px;overflow:hidden;margin-top:4px;">
+    <div style="height:100%;background:linear-gradient(90deg,#1f6feb,#bc8cff);border-radius:2px;animation:ldbar 1.5s ease-in-out infinite;"></div>
+  </div>
+</div>
 
-// ════════════════════════════════════════════════
-// REGION DATA
-// ════════════════════════════════════════════════
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, setDoc, onSnapshot }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBBMRDqyhl6-CkyO-SfOHs_ErXuGwvUN1E",
+  authDomain: "contact-manager-c62f1.firebaseapp.com",
+  projectId: "contact-manager-c62f1",
+  storageBucket: "contact-manager-c62f1.firebasestorage.app",
+  messagingSenderId: "382930140063",
+  appId: "1:382930140063:web:33c6a4c3ebce1784e05baa"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
 const SIDO_SIGUNGU = {
   "서울특별시":["종로구","중구","용산구","성동구","광진구","동대문구","중랑구","성북구","강북구","도봉구","노원구","은평구","서대문구","마포구","양천구","강서구","구로구","금천구","영등포구","동작구","관악구","서초구","강남구","송파구","강동구"],
   "부산광역시":["중구","서구","동구","영도구","부산진구","동래구","남구","북구","해운대구","사하구","금정구","강서구","연제구","수영구","사상구","기장군"],
@@ -374,54 +362,13 @@ const POLITICAL_EVENTS = [
   {id:'policy_collab',icon:'📜',label:'정책 협력',color:'#79c0ff'},
 ];
 
-// ════════════════════════════════════════════════
-
-<!-- 로딩 오버레이 -->
-<div id="_loadingOverlay" style="position:fixed;inset:0;background:#0d1117;display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:16px;">
-  <div style="font-size:36px;">🏛️</div>
-  <div style="font-size:16px;font-family:'Noto Sans KR',sans-serif;color:#e6edf3;font-weight:600;">인맥 관리 시스템</div>
-  <div style="font-size:13px;color:#8b949e;font-family:'Noto Sans KR',sans-serif;">Firebase 연결 중...</div>
-  <div style="width:200px;height:3px;background:#21262d;border-radius:2px;overflow:hidden;margin-top:4px;">
-    <div style="height:100%;background:linear-gradient(90deg,#1f6feb,#bc8cff);border-radius:2px;animation:ldbar 1.5s ease-in-out infinite;"></div>
-  </div>
-</div>
-<style>@keyframes ldbar{0%{width:0%}60%{width:80%}100%{width:100%}}</style>
-
-<script type="module">
-// FIREBASE 설정 — 아래 YOUR_FIREBASE_CONFIG_HERE 부분을
-// Firebase 콘솔에서 복사한 firebaseConfig 객체로 교체하세요
-// ════════════════════════════════════════════════
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, doc, getDoc, setDoc, onSnapshot, deleteDoc }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-  
-const firebaseConfig = {
-  apiKey: "AIzaSyBBMRDqyhl6-CkyO-SfOHs_ErXuGwvUN1E",
-  authDomain: "contact-manager-c62f1.firebaseapp.com",
-  projectId: "contact-manager-c62f1",
-  storageBucket: "contact-manager-c62f1.firebasestorage.app",
-  messagingSenderId: "382930140063",
-  appId: "1:382930140063:web:33c6a4c3ebce1784e05baa"
-};
-
-const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
-
-// ════════════════════════════════════════════════
-// DATA — Firebase Firestore 실시간 동기화
-// ════════════════════════════════════════════════
-let persons   = [];
-let meetings  = [];
-let relations = [];
-let cats      = {
+let persons=[],meetings=[],relations=[];
+let cats={
   parties:['민주당','국민의힘','정의당','개혁신당','국민의당','진보당','무소속','기타'],
   relTypes:['정치인','공무원','시민단체','언론','경제계','학계','종교','군인','법조계','의료계','기타'],
 };
-
-let selectedId=null, currentView='list', filteredPersons=[];
-let tempPolStar=0, tempLocStar=0, tempMeetStar=3;
-let _dbReady = false;
+let selectedId=null,currentView='list',filteredPersons=[];
+let tempPolStar=0,tempLocStar=0,tempMeetStar=3,_dbReady=false;
 
 const AVC=[
   {bg:'rgba(88,166,255,.2)',border:'#58a6ff',text:'#79c0ff'},
@@ -436,15 +383,12 @@ const genId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const starsStr=n=>'⭐'.repeat(n)+'☆'.repeat(5-n);
 const rf=p=>[p.sido,p.sigungu].filter(Boolean).join(' ');
 
-// ── Firestore 저장 ──
 async function save(){
-  try {
-    await setDoc(doc(db,'app','data'),{persons,meetings,relations,cats,updatedAt:Date.now()});
-  } catch(e){ console.error('저장 오류',e); showToast('저장 실패: '+e.message,'error'); }
+  try{await setDoc(doc(db,'app','data'),{persons,meetings,relations,cats,updatedAt:Date.now()});}
+  catch(e){console.error('저장 오류',e);showToast('저장 실패: '+e.message,'error');}
 }
 
-// ── 토스트 알림 ──
-function showToast(msg, type='info'){
+function showToast(msg,type='info'){
   let t=document.getElementById('_toast');
   if(!t){t=document.createElement('div');t.id='_toast';
     t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:10px 18px;border-radius:8px;font-size:13px;font-family:inherit;z-index:9999;transition:opacity .3s;pointer-events:none;';
@@ -455,44 +399,18 @@ function showToast(msg, type='info'){
   clearTimeout(t._tid);t._tid=setTimeout(()=>t.style.opacity='0',2800);
 }
 
-// ── 실시간 리스닝 ──
 function startRealtimeSync(){
-  const ref = doc(db,'app','data');
-  onSnapshot(ref, (snap)=>{
-    if(snap.exists()){
-      const d=snap.data();
-      persons  =d.persons   || [];
-      meetings =d.meetings  || [];
-      relations=d.relations || [];
-      if(d.cats)cats=d.cats;
-    }
-    if(!_dbReady){
-      _dbReady=true;
-      document.getElementById('_loadingOverlay').style.display='none';
-      populateFilters(); populateModal(); renderPersonList();
-    } else {
-      // 다른 사용자 변경 실시간 반영
-      renderPersonList();
-      if(currentView==='grid') renderGridView();
-      if(selectedId) showDetail(selectedId);
-      showToast('📡 데이터 동기화됨');
-    }
-  }, (err)=>{
+  const ref=doc(db,'app','data');
+  onSnapshot(ref,(snap)=>{
+    if(snap.exists()){const d=snap.data();persons=d.persons||[];meetings=d.meetings||[];relations=d.relations||[];if(d.cats)cats=d.cats;}
+    if(!_dbReady){_dbReady=true;document.getElementById('_loadingOverlay').style.display='none';populateFilters();populateModal();renderPersonList();}
+    else{renderPersonList();if(currentView==='grid')renderGridView();if(selectedId)showDetail(selectedId);showToast('📡 데이터 동기화됨');}
+  },(err)=>{
     console.error('Firestore 오류',err);
-    document.getElementById('_loadingOverlay').innerHTML=
-      '<div style="text-align:center;color:#f85149;font-size:14px;">⚠️ 데이터베이스 연결 실패<br><span style="font-size:12px;color:#8b949e;">Firebase 설정을 확인하세요</span></div>';
+    document.getElementById('_loadingOverlay').innerHTML='<div style="text-align:center;color:#f85149;font-size:14px;">⚠️ 데이터베이스 연결 실패<br><span style="font-size:12px;color:#8b949e;">Firebase 설정을 확인하세요</span></div>';
   });
 }
 
-// ════════════════════════════════════════════════
-// SAMPLE DATA
-// ════════════════════════════════════════════════
-// 샘플 데이터는 Firebase 첫 실행 시 자동으로 초기화됩니다
-// (initSample은 Firebase 버전에서는 서버에서 관리)
-
-// ════════════════════════════════════════════════
-// DROPDOWNS
-// ════════════════════════════════════════════════
 function populateFilters(){
   document.getElementById('filterParty').innerHTML='<option value="">전체 정당</option>'+cats.parties.map(p=>`<option>${p}</option>`).join('');
   document.getElementById('filterSido').innerHTML='<option value="">전체 광역</option>'+ALL_SIDO.map(s=>`<option>${s}</option>`).join('');
@@ -504,29 +422,17 @@ function populateModal(){
   document.getElementById('pSido').innerHTML='<option value="">-</option>'+ALL_SIDO.map(s=>`<option>${s}</option>`).join('');
   document.getElementById('pSigungu').innerHTML='<option value="">-</option>';
 }
-function onPersonSidoChange(){
-  const v=document.getElementById('pSido').value;
-  document.getElementById('pSigungu').innerHTML='<option value="">-</option>'+(v&&SIDO_SIGUNGU[v]?SIDO_SIGUNGU[v].map(s=>`<option>${s}</option>`).join(''):'');
-}
-function onSidoFilter(){
-  const v=document.getElementById('filterSido').value;
-  document.getElementById('filterSigungu').innerHTML='<option value="">전체 시군구</option>'+(v&&SIDO_SIGUNGU[v]?SIDO_SIGUNGU[v].map(s=>`<option>${s}</option>`).join(''):'');
-  applyFilters();
-}
+function onPersonSidoChange(){const v=document.getElementById('pSido').value;document.getElementById('pSigungu').innerHTML='<option value="">-</option>'+(v&&SIDO_SIGUNGU[v]?SIDO_SIGUNGU[v].map(s=>`<option>${s}</option>`).join(''):'');}
+function onSidoFilter(){const v=document.getElementById('filterSido').value;document.getElementById('filterSigungu').innerHTML='<option value="">전체 시군구</option>'+(v&&SIDO_SIGUNGU[v]?SIDO_SIGUNGU[v].map(s=>`<option>${s}</option>`).join(''):'');applyFilters();}
+window.onPersonSidoChange=onPersonSidoChange;window.onSidoFilter=onSidoFilter;
 
-// ════════════════════════════════════════════════
-// PERSON LIST
-// ════════════════════════════════════════════════
 function renderPersonList(){
   const q=document.getElementById('searchInput').value.toLowerCase();
-  const party=document.getElementById('filterParty').value;
-  const sido=document.getElementById('filterSido').value;
-  const sigungu=document.getElementById('filterSigungu').value;
-  const relT=document.getElementById('filterRelType').value;
+  const party=document.getElementById('filterParty').value,sido=document.getElementById('filterSido').value;
+  const sigungu=document.getElementById('filterSigungu').value,relT=document.getElementById('filterRelType').value;
   const inf=document.getElementById('filterInfluence').value;
   filteredPersons=persons.filter(p=>{
-    if(q&&!p.name.toLowerCase().includes(q)&&!(p.company||'').toLowerCase().includes(q)&&
-       !(p.party||'').includes(q)&&!(p.sido||'').includes(q)&&!(p.sigungu||'').includes(q))return false;
+    if(q&&!p.name.toLowerCase().includes(q)&&!(p.company||'').toLowerCase().includes(q)&&!(p.party||'').includes(q)&&!(p.sido||'').includes(q)&&!(p.sigungu||'').includes(q))return false;
     if(party&&p.party!==party)return false;
     if(sido&&p.sido!==sido)return false;
     if(sigungu&&p.sigungu!==sigungu)return false;
@@ -538,32 +444,25 @@ function renderPersonList(){
   const list=document.getElementById('personList');
   if(!filteredPersons.length){list.innerHTML='<div class="no-results">검색 결과 없음</div>';return;}
   list.innerHTML=filteredPersons.map(p=>{
-    const ac=getAC(p.name);
-    const ic=p.politicalInfluence>=4?'#f85149':p.politicalInfluence>=3?'#d29922':'#3fb950';
-    const region=rf(p);
+    const ac=getAC(p.name),ic=p.politicalInfluence>=4?'#f85149':p.politicalInfluence>=3?'#d29922':'#3fb950',region=rf(p);
     return`<div class="person-item${selectedId===p.id?' active':''}" onclick="selectPerson('${p.id}')">
       <div class="avatar" style="background:${ac.bg};border-color:${ac.border};color:${ac.text}">${p.name.charAt(0)}</div>
-      <div class="person-info">
-        <div class="person-name">${p.name}</div>
-        <div class="person-meta">${[p.party,region,p.duty].filter(Boolean).join(' · ')||'—'}</div>
-      </div>
+      <div class="person-info"><div class="person-name">${p.name}</div><div class="person-meta">${[p.party,region,p.duty].filter(Boolean).join(' · ')||'—'}</div></div>
       <div class="influence-dot" style="background:${ic}" title="정치영향력 ${p.politicalInfluence||0}"></div>
     </div>`;
   }).join('');
 }
 function selectPerson(id){selectedId=id;renderPersonList();if(currentView==='list')showDetail(id);}
 function applyFilters(){renderPersonList();if(currentView==='grid')renderGridView();}
+window.selectPerson=selectPerson;window.applyFilters=applyFilters;
 
-// ════════════════════════════════════════════════
-// DETAIL
-// ════════════════════════════════════════════════
 function showDetail(id){
   const p=persons.find(x=>x.id===id);if(!p)return;
   ['emptyState','gridView','networkView','adminView'].forEach(i=>document.getElementById(i).style.display='none');
   const dv=document.getElementById('detailView');dv.style.display='block';
   const ac=getAC(p.name),pM=meetings.filter(m=>m.personId===id),pR=relations.filter(r=>r.fromId===id||r.toId===id);
   const PC={'민주당':'#58a6ff','국민의힘':'#f85149','정의당':'#3fb950','개혁신당':'#e3b341','무소속':'#8b949e'};
-  const pc=PC[p.party]||'#8b949e';const region=rf(p);
+  const pc=PC[p.party]||'#8b949e',region=rf(p);
   dv.innerHTML=`<div class="detail-view fade-in">
     <div class="detail-hero">
       <div class="detail-avatar" style="background:${ac.bg};border-color:${ac.border};color:${ac.text}">${p.name.charAt(0)}</div>
@@ -640,9 +539,6 @@ function showDetail(id){
   </div>`;
 }
 
-// ════════════════════════════════════════════════
-// GRID VIEW
-// ════════════════════════════════════════════════
 function renderGridView(){
   const gv=document.getElementById('gridView');gv.style.display='grid';
   const PC={'민주당':'#58a6ff','국민의힘':'#f85149','정의당':'#3fb950','무소속':'#8b949e'};
@@ -667,9 +563,6 @@ function renderGridView(){
   }).join('');
 }
 
-// ════════════════════════════════════════════════
-// NETWORK
-// ════════════════════════════════════════════════
 let netNodes=[],netEdges=[],netDrag=null,netOffX=0,netOffY=0,netScale=1,isPan=false,panS=null,nMX=0,nMY=0;
 function renderNetwork(){
   const nv=document.getElementById('networkView');nv.style.display='flex';
@@ -704,9 +597,6 @@ function drawNet(){
   ctx.restore();
 }
 
-// ════════════════════════════════════════════════
-// ADMIN
-// ════════════════════════════════════════════════
 let openSido=null;
 function renderAdmin(){
   const av=document.getElementById('adminView');av.style.display='block';
@@ -718,26 +608,21 @@ function renderAdmin(){
       <button class="btn btn-primary" style="font-size:12px;padding:6px 12px;" onclick="addCat('${key}')">＋ 추가</button>
     </div>
   </div>`;
-
   const sidoBlocks=ALL_SIDO.map(s=>{const isOpen=openSido===s;
     return`<div class="sido-chip ${isOpen?'open':''}" onclick="toggleSido('${s}')">
-      <div class="sido-chip-name">${s}</div>
-      <div class="sido-chip-count">${SIDO_SIGUNGU[s].length}개 시·군·구</div>
+      <div class="sido-chip-name">${s}</div><div class="sido-chip-count">${SIDO_SIGUNGU[s].length}개 시·군·구</div>
       ${isOpen?`<div class="sigungu-list">${SIDO_SIGUNGU[s].map(sg=>`<span class="sigungu-item">${sg}</span>`).join('')}</div>`:''}
     </div>`;}).join('');
-
   av.innerHTML=`<div class="admin-wrap">
     <div class="admin-page-title">⚙️ 관리자 설정</div>
     <div class="admin-page-sub">정당, 관계 분류 등 드롭다운 항목을 편집합니다. 변경사항은 즉시 반영됩니다.</div>
     <div class="admin-sections">${mkSec('parties','정당 목록','🏛️')}${mkSec('relTypes','관계 분류','🔖')}</div>
-
     <div class="divider"></div>
     <div style="margin-bottom:14px;">
       <div style="font-size:14px;font-weight:700;margin-bottom:4px;">📍 지역 데이터 — 기초지방자치단체</div>
       <div style="font-size:13px;color:var(--text2);margin-bottom:12px;">총 ${Object.values(SIDO_SIGUNGU).flat().length}개 기초자치단체 내장. 클릭하면 시·군·구 목록이 펼쳐집니다.</div>
       <div class="region-preview-grid">${sidoBlocks}</div>
     </div>
-
     <div class="divider"></div>
     <div>
       <div style="font-size:14px;font-weight:700;margin-bottom:12px;">🗄️ 데이터 관리</div>
@@ -756,23 +641,11 @@ function renderAdmin(){
 function toggleSido(s){openSido=openSido===s?null:s;renderAdmin();}
 function addCat(key){const inp=document.getElementById('ai_'+key);const v=inp.value.trim();if(!v)return;if(!cats[key].includes(v))cats[key].push(v);inp.value='';save();renderAdmin();populateFilters();populateModal();}
 function delCat(key,idx){cats[key].splice(idx,1);save();renderAdmin();populateFilters();populateModal();}
-function exportData(){
-  const blob=new Blob([JSON.stringify({persons,meetings,relations,cats},null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='인맥관리_'+new Date().toISOString().slice(0,10)+'.json';a.click();
-}
-function importData(e){
-  const f=e.target.files[0];if(!f)return;
-  const fr=new FileReader();fr.onload=ev=>{try{const d=JSON.parse(ev.target.result);
-    if(d.persons)persons=d.persons;if(d.meetings)meetings=d.meetings;
-    if(d.relations)relations=d.relations;if(d.cats)cats=d.cats;
-    save();renderPersonList();populateFilters();populateModal();renderAdmin();alert('가져오기 완료!');}
-  catch{alert('올바른 JSON 파일이 아닙니다.');}};fr.readAsText(f);
-}
+function exportData(){const blob=new Blob([JSON.stringify({persons,meetings,relations,cats},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='인맥관리_'+new Date().toISOString().slice(0,10)+'.json';a.click();}
+function importData(e){const f=e.target.files[0];if(!f)return;const fr=new FileReader();fr.onload=ev=>{try{const d=JSON.parse(ev.target.result);if(d.persons)persons=d.persons;if(d.meetings)meetings=d.meetings;if(d.relations)relations=d.relations;if(d.cats)cats=d.cats;save();renderPersonList();populateFilters();populateModal();renderAdmin();alert('가져오기 완료!');}catch{alert('올바른 JSON 파일이 아닙니다.');}};fr.readAsText(f);}
 async function clearAll(){if(!confirm('모든 데이터를 초기화합니까? 되돌릴 수 없습니다.'))return;persons=[];meetings=[];relations=[];await save();selectedId=null;renderPersonList();renderAdmin();showToast('초기화 완료','success');}
+window.toggleSido=toggleSido;window.addCat=addCat;window.delCat=delCat;window.exportData=exportData;window.importData=importData;window.clearAll=clearAll;
 
-// ════════════════════════════════════════════════
-// VIEW SWITCH
-// ════════════════════════════════════════════════
 function switchView(view){
   currentView=view;
   document.querySelectorAll('.view-tab').forEach(t=>t.classList.remove('active'));
@@ -785,12 +658,11 @@ function switchView(view){
   else if(view==='network')renderNetwork();
   else if(view==='admin')renderAdmin();
 }
+window.switchView=switchView;
 
-// ════════════════════════════════════════════════
-// MODALS
-// ════════════════════════════════════════════════
 function openModal(id){document.getElementById(id).classList.add('show');}
 function closeModal(id){document.getElementById(id).classList.remove('show');}
+window.openModal=openModal;window.closeModal=closeModal;
 document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show');}));
 
 function openAddPersonModal(){
@@ -811,10 +683,8 @@ function openEditModal(id){
   document.getElementById('pMemo').value=p.memo||'';document.getElementById('pSex').value=p.sex||'';
   document.getElementById('pBirth').value=p.birth||'';document.getElementById('pParty').value=p.party||'';
   document.getElementById('pRelation').value=p.relation||'';document.getElementById('pSido').value=p.sido||'';
-  if(p.sido&&SIDO_SIGUNGU[p.sido]){
-    document.getElementById('pSigungu').innerHTML='<option value="">-</option>'+SIDO_SIGUNGU[p.sido].map(s=>`<option>${s}</option>`).join('');
-    document.getElementById('pSigungu').value=p.sigungu||'';
-  }else document.getElementById('pSigungu').innerHTML='<option value="">-</option>';
+  if(p.sido&&SIDO_SIGUNGU[p.sido]){document.getElementById('pSigungu').innerHTML='<option value="">-</option>'+SIDO_SIGUNGU[p.sido].map(s=>`<option>${s}</option>`).join('');document.getElementById('pSigungu').value=p.sigungu||'';}
+  else document.getElementById('pSigungu').innerHTML='<option value="">-</option>';
   tempPolStar=p.politicalInfluence||0;tempLocStar=p.localInfluence||0;
   updateStarUI('pPoliticalStars',tempPolStar);updateStarUI('pLocalStars',tempLocStar);
   document.getElementById('personModalTitle').textContent='✏️ 인물 수정';
@@ -841,6 +711,8 @@ function deletePerson(id){
   persons=persons.filter(p=>p.id!==id);meetings=meetings.filter(m=>m.personId!==id);relations=relations.filter(r=>r.fromId!==id&&r.toId!==id);
   save();selectedId=null;renderPersonList();document.getElementById('detailView').style.display='none';document.getElementById('emptyState').style.display='flex';
 }
+window.openAddPersonModal=openAddPersonModal;window.openEditModal=openEditModal;window.setPStar=setPStar;window.savePerson=savePerson;window.deletePerson=deletePerson;
+
 function openMeetingModal(pid){
   document.getElementById('meetingPersonId').value=pid;document.getElementById('mDate').value=new Date().toISOString().slice(0,10);
   ['mPlace','mWith','mMemo','mEval'].forEach(id=>document.getElementById(id).value='');
@@ -856,6 +728,8 @@ function saveMeeting(){
   save();closeModal('addMeetingModal');if(selectedId===pid)showDetail(pid);
 }
 function deleteMeeting(id){if(!confirm('삭제하시겠습니까?'))return;meetings=meetings.filter(m=>m.id!==id);save();showDetail(selectedId);}
+window.openMeetingModal=openMeetingModal;window.setMStar=setMStar;window.saveMeeting=saveMeeting;window.deleteMeeting=deleteMeeting;
+
 function openRelationModal(fromId){
   document.getElementById('relFromId').value=fromId;
   document.getElementById('relToId').innerHTML=persons.filter(p=>p.id!==fromId).map(p=>`<option value="${p.id}">${p.name} (${p.party||'무소속'} / ${rf(p)||'지역미상'})</option>`).join('');
@@ -866,8 +740,7 @@ function saveRelation(){
   const fromId=document.getElementById('relFromId').value,toId=document.getElementById('relToId').value;
   const dup=relations.find(r=>(r.fromId===fromId&&r.toId===toId)||(r.fromId===toId&&r.toId===fromId));
   if(dup){if(!confirm('이미 관계가 있습니다. 업데이트하시겠습니까?'))return;relations=relations.filter(r=>r.id!==dup.id);}
-  relations.push({id:genId(),fromId,toId,closeness:parseInt(document.getElementById('relClose').value),
-    type:document.getElementById('relType').value,memo:document.getElementById('relMemo').value});
+  relations.push({id:genId(),fromId,toId,closeness:parseInt(document.getElementById('relClose').value),type:document.getElementById('relType').value,memo:document.getElementById('relMemo').value});
   save();closeModal('addRelationModal');showDetail(selectedId);
 }
 function deleteRelation(id){if(!confirm('삭제하시겠습니까?'))return;relations=relations.filter(r=>r.id!==id);save();showDetail(selectedId);}
@@ -882,12 +755,11 @@ function toggleEvent(pid,evId){
   const i=p.events.indexOf(evId);if(i>=0)p.events.splice(i,1);else p.events.push(evId);
   save();showDetail(pid);
 }
+window.openRelationModal=openRelationModal;window.saveRelation=saveRelation;window.deleteRelation=deleteRelation;window.editCloseness=editCloseness;window.toggleEvent=toggleEvent;
 
 document.getElementById('searchInput').addEventListener('input',()=>{renderPersonList();if(currentView==='grid')renderGridView();});
 
-// INIT — Firebase 실시간 동기화 시작
 startRealtimeSync();
-
 </script>
 </body>
 </html>
