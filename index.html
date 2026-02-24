@@ -391,7 +391,23 @@ const POLITICAL_EVENTS = [
 // FIREBASE 설정 — 아래 YOUR_FIREBASE_CONFIG_HERE 부분을
 // Firebase 콘솔에서 복사한 firebaseConfig 객체로 교체하세요
 // ════════════════════════════════════════════════
-const firebaseConfig = YOUR_FIREBASE_CONFIG_HERE;
+const firebaseConfig = // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyBBMRDqyhl6-CkyO-SfOHs_ErXuGwvUN1E",
+  authDomain: "contact-manager-c62f1.firebaseapp.com",
+  projectId: "contact-manager-c62f1",
+  storageBucket: "contact-manager-c62f1.firebasestorage.app",
+  messagingSenderId: "382930140063",
+  appId: "1:382930140063:web:33c6a4c3ebce1784e05baa"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);;
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, doc, getDoc, setDoc, onSnapshot, deleteDoc }
